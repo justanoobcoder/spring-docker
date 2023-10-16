@@ -2,13 +2,13 @@ FROM eclipse-temurin:17-jdk-jammy AS resolve-dependencies
 WORKDIR /app
 COPY .mvn .mvn
 COPY pom.xml mvnw ./
-RUN ["./mvnw", "dependency:go-offline", "-B"]
+RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "dependency:go-offline", "-B"]
 
 
 FROM resolve-dependencies AS build
 WORKDIR /app
 COPY src ./src
-RUN ["./mvnw", "package", "-DskipTests"]
+RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "package", "-DskipTests"]
 
 
 FROM eclipse-temurin:17-jre-jammy AS run
