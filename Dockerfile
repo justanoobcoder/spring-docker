@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jdk-jammy AS resolve-dependencies
 WORKDIR /app
 COPY .mvn .mvn
 COPY pom.xml mvnw ./
-RUN ["./mvnw", "dependency:resolve"]
+RUN ["./mvnw", "dependency:go-offline", "-B"]
 
 
 FROM resolve-dependencies AS build
