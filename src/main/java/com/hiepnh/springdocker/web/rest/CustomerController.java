@@ -139,4 +139,28 @@ public class CustomerController {
         customerService.updateCustomer(id, customerVm);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(
+            summary = "Delete customer",
+            description = "Delete customer",
+            tags = {"Customer APIs"},
+            responses = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Deleted customer successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Customer not found",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorVm.class)
+                    )
+            )
+    })
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Integer id) {
+        customerService.deleteCustomer(id);
+        return ResponseEntity.noContent().build();
+    }
 }

@@ -75,4 +75,11 @@ public class CustomerService {
         customer.setBirthday(customerVm.birthday());
         customerRepository.saveAndFlush(customer);
     }
+
+    public void deleteCustomer(Integer id) {
+        Customer customer = customerRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(Constants.CUSTOMER_NOT_FOUND, id));
+        customerRepository.delete(customer);
+    }
 }
