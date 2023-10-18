@@ -67,7 +67,7 @@ public class CustomerService {
         if (customerRepository.existsByPhone(customerVm.phone()) && !customerVm.phone().equals(customer.getPhone())) {
             throw new DuplicatedException(Constants.PHONE_NUMBER_ALREADY_EXISTS, customerVm.phone());
         }
-        if (customerVm.birthday().isBefore(LocalDate.now().minusYears(18))) {
+        if (customerVm.birthday().isAfter(LocalDate.now().minusYears(18))) {
             throw new BadRequestException(Constants.CUSTOMER_MUST_BE_AT_LEAST_18_YEARS_OLD);
         }
         customer.setName(customerVm.name());
