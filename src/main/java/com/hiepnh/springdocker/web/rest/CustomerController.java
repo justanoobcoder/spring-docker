@@ -65,7 +65,9 @@ public class CustomerController {
             )
     })
     @GetMapping(params = {"name", "page", "size"})
-    public ResponseEntity<CustomerPageGetVm> getCustomersByName(String name, int page, int size) {
+    public ResponseEntity<CustomerPageGetVm> getCustomersByName(String name,
+                                                                @RequestParam(defaultValue = "0", required = false) int page,
+                                                                @RequestParam(defaultValue = "10", required = false) int size) {
         CustomerPageGetVm customerPageGetVm = customerService.getCustomersByName(name, page, size);
         return ResponseEntity.ok(customerPageGetVm);
     }
