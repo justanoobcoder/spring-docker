@@ -128,4 +128,19 @@ public class CustomerServiceTest {
         assertThat(customerGetVm.phone()).isEqualTo(phone);
         assertThat(customerGetVm.birthday()).isEqualTo(birthday);
     }
+
+    @Test
+    public void deleteCustomer_whenCustomerIdInvalid_shouldThrowNotFoundException() {
+        // Given
+        Integer id = 1;
+
+        // When
+        when(customerRepository.findById(id)).thenReturn(Optional.empty());
+
+        // Stub
+        NotFoundException exception = assertThrows(NotFoundException.class, () -> customerService.deleteCustomer(id));
+
+        // Then
+        assertThat(exception.getMessage()).isEqualTo(String.format("Customer %s is not found", id));
+    }
 }
