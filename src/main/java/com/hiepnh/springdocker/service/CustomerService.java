@@ -9,6 +9,7 @@ import com.hiepnh.springdocker.util.Constants;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerPageGetVm;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerGetVm;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerPostVm;
+import com.hiepnh.springdocker.viewmodel.customer.CustomerPutVm;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -57,5 +58,21 @@ public class CustomerService {
                 .build();
         customer = customerRepository.saveAndFlush(customer);
         return CustomerGetVm.fromEntity(customer);
+    }
+
+    public void updateCustomer(Integer id, CustomerPutVm customerVm) {
+        Customer customer = customerRepository
+                .findById(id)
+                .orElseThrow(() -> new NotFoundException(Constants.CUSTOMER_NOT_FOUND, id));
+        if (customerRepository.existsByPhone(customerVm.phone()) && !customerVm.phone().equals(customer.getPhone())) {
+            throw new DuplicatedException(Constants.PHONE_NUMBER_ALREADY_EXISTS, customerVm.phone());
+        }
+        if (customerVm.birthday().isBefore(LocalDate.now().minusYears(18))) {
+            throw new BadRequestException(Constants.CUSTOMER_MUST_BE_AT_LEAST_18_YEARS_OLD);
+        }
+        customer.setName(customerVm.name());
+        customer.setPhone(customerVm.phone());
+        customer.setBirthday(customerVm.birthday());
+        customerRepository.saveAndFlush(customer);
     }
 }

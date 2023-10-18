@@ -4,6 +4,7 @@ import com.hiepnh.springdocker.service.CustomerService;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerPageGetVm;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerGetVm;
 import com.hiepnh.springdocker.viewmodel.customer.CustomerPostVm;
+import com.hiepnh.springdocker.viewmodel.customer.CustomerPutVm;
 import com.hiepnh.springdocker.viewmodel.error.ErrorVm;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -95,5 +96,45 @@ public class CustomerController {
     public ResponseEntity<CustomerGetVm> createCustomer(@RequestBody CustomerPostVm customerVm) {
         CustomerGetVm createdCustomerVm = customerService.createCustomer(customerVm);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdCustomerVm);
+    }
+
+    @Operation(
+            summary = "Update customer",
+            description = "Update customer",
+            tags = {"Customer APIs"},
+            responses = {
+            @ApiResponse(
+                    responseCode = "204",
+                    description = "Updated customer successfully"
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad request",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorVm.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Customer not found",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorVm.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "Conflict",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorVm.class)
+                    )
+            )
+    })
+    @PutMapping("{id}")
+    public ResponseEntity<Void> updateCustomer(@PathVariable Integer id, @RequestBody CustomerPutVm customerVm) {
+        customerService.updateCustomer(id, customerVm);
+        return ResponseEntity.noContent().build();
     }
 }
