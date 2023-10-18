@@ -5,6 +5,12 @@ COPY pom.xml mvnw ./
 RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "dependency:go-offline", "-B"]
 
 
+FROM resolve-dependencies AS test
+WORKDIR /app
+COPY src ./src
+RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "test"]
+
+
 FROM resolve-dependencies AS build
 WORKDIR /app
 COPY src ./src
