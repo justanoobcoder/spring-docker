@@ -6,18 +6,15 @@ RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "dependency:go-offline", "-B"
 
 
 FROM resolve-dependencies AS test
-WORKDIR /app
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "test"]
 
 
 FROM resolve-dependencies AS build
-WORKDIR /app
 COPY src ./src
 RUN --mount=type=cache,target=/root/.m2 ["./mvnw", "package", "-DskipTests"]
 
 
 FROM eclipse-temurin:17-jre-jammy AS run
-WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
